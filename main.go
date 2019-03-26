@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	_ "go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
