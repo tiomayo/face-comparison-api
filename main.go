@@ -21,6 +21,7 @@ func main() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
 	r.HandleFunc("/identify", C.Identify).Methods("POST")
+	// r.HandleFunc("/upload", C.UploadImage).Methods("POST")
 	log.Println("Connected to port 8000")
 	if err := http.ListenAndServe(":8000", r); err != nil {
 		log.Fatal(err)
