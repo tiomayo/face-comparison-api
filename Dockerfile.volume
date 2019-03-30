@@ -1,0 +1,42 @@
+# Dockerfile References: https://docs.docker.com/engine/reference/builder/
+
+# Start from golang v1.12 base image
+FROM golang:1.12
+
+# Authors info
+LABEL authors="adhityasan,tiomayo"
+
+# Create arguments
+ARG APP_NAME=face-comparison-api
+ARG LOG_DIR=/${APP_NAME}/logs
+
+# Create Log Directory
+RUN mkdir -p ${LOG_DIR}
+
+# Environment Variables
+ENV LOG_FILE_LOCATION=${LOG_DIR}/app.log 
+
+# Set the Current Working Directory inside the container
+WORKDIR $GOPATH/src/github.com/tiomayo/face-comparison-api
+
+# Set the Current Working Directory inside the container
+WORKDIR $GOPATH/src/github.com/tiomayo/face-comparison-api
+
+# Copy everything from the current directory to the PWD(Present Working Directory) inside the container
+COPY . .
+
+# Download all the dependencies
+# https://stackoverflow.com/questions/28031603/what-do-three-dots-mean-in-go-command-line-invocations
+RUN go get -d -v ./...
+
+# Install the package
+RUN go install -v ./...
+
+# This container exposes port 8000 to the outside world
+EXPOSE 8000
+
+# Declare volumes to mount
+VOLUME ["/face-comparison-api/logs"]
+
+# Run the executable
+CMD ["face-comparison-api"]
