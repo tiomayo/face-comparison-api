@@ -1,5 +1,5 @@
-[![N|Solid](https://gitlab.docotel.net/uploads/-/system/appearance/header_logo/1/Docotel_Logo_28_px__2_.png)](https://gitlab.docotel.net/ws/sdp-user-service) [Tiomayo](https://github.com/tiomayo/mit/) ,
-[Kaonashi](https://choosealicense.com/licenses/mit/)
+[![N|Solid](https://gitlab.docotel.net/uploads/-/system/appearance/header_logo/1/Docotel_Logo_28_px__2_.png)](https://docotel.com) [Tiomayo](https://github.com/tiomayo/face-comparison-api/) ,
+[Kaonashi](https://github.com/adhityasan/face-comparison-api/)
 
 
 # face-comparison-api
