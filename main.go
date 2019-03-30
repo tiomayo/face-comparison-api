@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"ekyc/controller"
+	"github.com/tiomayo/face-comparison-api/controller"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -21,6 +21,7 @@ func main() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
 	r.HandleFunc("/identify", controller.Identify).Methods("POST")
+	r.HandleFunc("/go/aisatsu", controller.Aisatsu).Methods("GET")
 	// r.HandleFunc("/upload", controller.UploadImage).Methods("POST")
 	log.Println("Connected to port 8000")
 	if err := http.ListenAndServe(":8000", r); err != nil {

@@ -3,7 +3,7 @@ package imagehandler
 import (
 	"fmt"
 
-	"ekyc/imagehandler/azure"
+	"github.com/tiomayo/face-comparison-api/imagehandler/azure"
 )
 
 // Comparator interface to compare two images

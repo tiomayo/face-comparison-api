@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"ekyc/imagehandler"
+	"github.com/tiomayo/face-comparison-api/imagehandler"
 )
 
 var urlgambar = `{"url":"http://cdn2.tstatic.net/batam/foto/bank/images/cut-tari-artis-dan-pembawa-acara-televisi.jpg"}`
@@ -44,4 +44,14 @@ func HitDukcapil() (data interface{}) {
 	}
 	json.NewDecoder(response.Body).Decode(&data)
 	return data
+}
+
+// Aisatsu sample get request for testing purpose
+func Aisatsu(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query()
+	name := query.Get("name")
+	if name == "" {
+		name = "Guest"
+	}
+	log.Printf("こんにちは %s\n", name)
 }
