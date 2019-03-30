@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -53,5 +54,6 @@ func Aisatsu(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "Guest"
 	}
-	log.Printf("こんにちは %s\n", name)
+	log.Printf("こんにちは %s'san\n", name)
+	w.Write([]byte(fmt.Sprintf("Hello, %s'san\n", name)))
 }
