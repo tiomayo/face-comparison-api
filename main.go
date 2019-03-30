@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	C "./controller"
+	"ekyc/controller"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,8 +20,8 @@ func init() {
 func main() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
-	r.HandleFunc("/identify", C.Identify).Methods("POST")
-	// r.HandleFunc("/upload", C.UploadImage).Methods("POST")
+	r.HandleFunc("/identify", controller.Identify).Methods("POST")
+	// r.HandleFunc("/upload", controller.UploadImage).Methods("POST")
 	log.Println("Connected to port 8000")
 	if err := http.ListenAndServe(":8000", r); err != nil {
 		log.Fatal(err)

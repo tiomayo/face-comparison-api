@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/tiomayo/middleware/imagehandler"
+	"ekyc/imagehandler"
 )
 
 var urlgambar = `{"url":"http://cdn2.tstatic.net/batam/foto/bank/images/cut-tari-artis-dan-pembawa-acara-televisi.jpg"}`
