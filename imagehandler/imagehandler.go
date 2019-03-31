@@ -12,6 +12,11 @@ type Comparator interface {
 	CompareByImages([]byte, []byte, chan []byte)
 }
 
+// OCRReader interface to read identity from images
+type OCRReader interface {
+	Read([]byte, chan []byte)
+}
+
 // Azure using Azure API to compare
 type Azure struct{}
 
@@ -41,6 +46,14 @@ func (a Azure) CompareByImages(img1 []byte, img2 []byte, ch chan []byte) {
 	}
 	imgJSON, err := azure.GetConfidence(faceIDKTP, faceIDSelfie)
 	ch <- imgJSON
+}
+
+func (a Azure) Read(imgktp []byte, ch chan []byte) {
+	jsonIdentity, err := azure.Read(imgktp)
+	if err != nil {
+		fmt.Sprintln(err)
+	}
+	ch <- jsonIdentity
 }
 
 // AWS using AWS API to compare

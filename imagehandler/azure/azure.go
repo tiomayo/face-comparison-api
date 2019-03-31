@@ -9,7 +9,7 @@ import (
 )
 
 const uriDetect = "https://southeastasia.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true"
-const uriVerivy = "https://southeastasia.api.cognitive.microsoft.com/face/v1.0/verify"
+const uriVerify = "https://southeastasia.api.cognitive.microsoft.com/face/v1.0/verify"
 const apiKey = "1e8c2f50c76d49e9bf1eb2431d772242"
 
 type faceAttr []struct {
@@ -20,7 +20,7 @@ type faceAttr []struct {
 func GetConfidence(imageID1 string, imageID2 string) ([]byte, error) {
 	res := new(bytes.Buffer)
 	imgStr := `{"faceId1":"` + imageID1 + `","faceId2":"` + imageID2 + `"}`
-	req, _ := http.NewRequest("POST", uriVerivy, strings.NewReader(imgStr))
+	req, _ := http.NewRequest("POST", uriVerify, strings.NewReader(imgStr))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Ocp-Apim-Subscription-Key", apiKey)
 	client := &http.Client{}
