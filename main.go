@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/tiomayo/face-comparison-api/controller"
+	"github.com/tiomayo/middleware/controller"
 
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -32,7 +32,6 @@ func main() {
 	// Define Routes
 	r.HandleFunc("/identify", controller.Identify).Methods("POST")
 	r.HandleFunc("/go/aisatsu", controller.Aisatsu).Methods("GET")
-	// r.HandleFunc("/upload", controller.UploadImage).Methods("POST")
 
 	// Start Server
 	go func() {

@@ -33,7 +33,7 @@ func GetConfidence(imageID1 string, imageID2 string) ([]byte, error) {
 	return []byte(res.String()), nil
 }
 
-// FaceID get face id from Azure Face Detection API
+// FaceID get face id from Azure Face Detection API using url as a source
 func FaceID(source string) (string, error) {
 	var res faceAttr
 	req, _ := http.NewRequest("POST", uriDetect, strings.NewReader(source))
@@ -45,6 +45,26 @@ func FaceID(source string) (string, error) {
 		return "", errors.New("fail to reach Azure Face Detection API, may caused by client policy or network connectivity problem")
 	}
 	defer resp.Body.Close()
-	json.NewDecoder(resp.Body).Decode(&res)
+	if err = json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return "", err
+	}
+	return res[0].FaceID, nil
+}
+
+// FaceIDByImage get face id from Azure Face Detection API using image as a source
+func FaceIDByImage(ImgBytes []byte) (string, error) {
+	var res faceAttr
+	req, _ := http.NewRequest("POST", uriDetect, bytes.NewBuffer(ImgBytes))
+	req.Header.Set("Content-Type", "application/octet-stream")
+	req.Header.Set("Ocp-Apim-Subscription-Key", apiKey)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", errors.New("fail to reach Azure Face Detection API, may caused by client policy or network connectivity problem")
+	}
+	defer resp.Body.Close()
+	if err = json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		return "", err
+	}
 	return res[0].FaceID, nil
 }
