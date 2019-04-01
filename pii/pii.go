@@ -23,25 +23,26 @@ type ImageStruct struct {
 
 // Pii stands for Personal Identifying Information
 type Pii struct {
-	ID              primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Nik             string             `json:"nik" bson:"nik"`
-	EktpStatus      bool               `json:"ektp_status" bson:"ektp_status"`
-	NamaLengkap     string             `json:"nama_lengkap" bson:"nama_lengkap"`
-	NoHp            string             `json:"no_hp" bson:"no_hp"`
-	TanggalLahir    *time.Time         `json:"tanggal_lahir" bson:"tanggal_lahir"`
-	TempatLahir     string             `json:"tempat_lahir" bson:"tempat_lahir"`
-	PendidikanAkhir string             `json:"pendidikan_akhir" bson:"pendidikan_akhir"`
-	NoKK            string             `json:"no_kk" bson:"no_kk"`
-	Alamat          string             `json:"alamat" bson:"alamat"`
-	Rt              string             `json:"rt" bson:"rt"`
-	Rw              string             `json:"rw" bson:"rw"`
-	Kecamatan       string             `json:"kecamatan" bson:"kecamatan"`
-	Kabupaten       string             `json:"kabupaten" bson:"kabupaten"`
-	Provinsi        string             `json:"provinsi" bson:"provinsi"`
-	Agama           string             `json:"agama" bson:"agama"`
-	Pekerjaan       string             `json:"pekerjaan" bson:"pekerjaan"`
-	StatusKawin     string             `json:"status_kawin" bson:"status_kawin"`
-	FotoKTP         *ImageStruct       `json:"foto_ktp" bsono:"foto_ktp"`
+	ID               primitive.ObjectID `schema:"_id,omitempty" bson:"_id,omitempty"`
+	Nik              string             `schema:"nik,omitempty" bson:"nik,omitempty"`
+	EktpStatus       bool               `schema:"ektp_status,omitempty" bson:"ektp_status,omitempty"`
+	NamaLengkap      string             `schema:"nama_lengkap,omitempty" bson:"nama_lengkap,omitempty"`
+	NoHp             string             `schema:"no_hp,omitempty" bson:"no_hp,omitempty"`
+	TanggalLahir     string             `schema:"tanggal_lahir,omitempty" bson:"tanggal_lahir,omitempty"`
+	TempatLahir      string             `schema:"tempat_lahir,omitempty" bson:"tempat_lahir,omitempty"`
+	PendidikanAkhir  string             `schema:"pendidikan_akhir,omitempty" bson:"pendidikan_akhir,omitempty"`
+	NoKK             string             `schema:"no_kk,omitempty" bson:"no_kk,omitempty"`
+	Alamat           string             `schema:"alamat,omitempty" bson:"alamat,omitempty"`
+	Rt               string             `schema:"rt,omitempty" bson:"rt,omitempty"`
+	Rw               string             `schema:"rw,omitempty" bson:"rw,omitempty"`
+	Kecamatan        string             `schema:"kecamatan,omitempty" bson:"kecamatan,omitempty"`
+	Kabupaten        string             `schema:"kabupaten,omitempty" bson:"kabupaten,omitempty"`
+	Provinsi         string             `schema:"provinsi,omitempty" bson:"provinsi,omitempty"`
+	Agama            string             `schema:"agama,omitempty" bson:"agama,omitempty"`
+	Pekerjaan        string             `schema:"pekerjaan,omitempty" bson:"pekerjaan,omitempty"`
+	StatusPerkawinan string             `schema:"status_perkawinan,omitempty" bson:"status_perkawinan,omitempty"`
+	FotoKTP          *ImageStruct       `schema:"foto_ktp,omitempty" bson:"foto_ktp,omitempty"`
+	FotoSelfie       *ImageStruct       `schema:"foto_selfie,omitempty" bson:"foto_selfie,omitempty"`
 }
 
 // GetLocalPii func to get Personal Information based on given nik (param)
