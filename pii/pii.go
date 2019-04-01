@@ -3,8 +3,10 @@ package pii
 import (
 	"context"
 	"fmt"
+	"net/textproto"
 	"time"
 
+	"github.com/gorilla/schema"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -13,10 +15,10 @@ import (
 
 // ImageStruct standart Struct for image
 type ImageStruct struct {
-	Data   []byte `json:"data,omitempty"`
-	Name   string `json:"name,omitempty"`
-	Size   string `json:"size,omitempty"`
-	Header string `json:"header,omitempty"`
+	Data   []byte               `schema:"data,omitempty" bson:"data,omitempty"`
+	Name   string               `schema:"name,omitempty" bson:"name,omitempty"`
+	Size   int64                `schema:"size,omitempty" bson:"size,omitempty"`
+	Header textproto.MIMEHeader `schema:"header,omitempty" bson:"header,omitempty"`
 }
 
 // Pii stands for Personal Identifying Information
