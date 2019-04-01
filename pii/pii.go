@@ -120,3 +120,20 @@ func imageStructHandler(fieldname string, r *http.Request) (*ImageStruct, error)
 
 	return newImageStruct, nil
 }
+
+// Save current Personal Identifying Information
+func (p *Pii) Save() (interface{}, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	client, _ := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	collection := client.Database("facecomparison").Collection("pii")
+	res, err := collection.InsertOne(ctx, p)
+	defer cancel()
+
+	if err != nil {
+		return nil, err
+	}
+
+	id := res.InsertedID
+
+	return id, nil
+}
