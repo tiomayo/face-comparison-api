@@ -10,7 +10,7 @@ import (
 
 const uriDetect = "https://southeastasia.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true"
 const uriVerify = "https://southeastasia.api.cognitive.microsoft.com/face/v1.0/verify"
-const apiKey = "1e8c2f50c76d49e9bf1eb2431d772242"
+const apiKey = ""
 
 type faceAttr []struct {
 	FaceID string `json:"faceId"`
