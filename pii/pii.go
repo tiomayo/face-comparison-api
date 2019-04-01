@@ -96,6 +96,8 @@ func DecodeFormPost(r *http.Request) (*Pii, error) {
 
 	newPii.FotoKTP, err = imageStructHandler("foto_ktp", r)
 	newPii.FotoSelfie, err = imageStructHandler("foto_selfie", r)
+	newPii.FotoSelfieWithKTP, err = imageStructHandler("foto_selfie_with_ktp", r)
+	newPii.PasfotoKTP, err = imageStructHandler("pasfoto_ktp", r)
 
 	return newPii, nil
 }
