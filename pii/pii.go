@@ -72,10 +72,6 @@ func GetLocalPii(nik string) {
 // DecodeFormPost decode the formPost data in requests form-data and assign it to Pii Struct
 func DecodeFormPost(r *http.Request) (*Pii, error) {
 
-	if r.Method != "POST" {
-		return nil, errors.New("DecodeFormPost need POST method request")
-	}
-
 	r.ParseMultipartForm(10 << 20)
 
 	fd := r.PostForm
