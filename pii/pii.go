@@ -110,3 +110,19 @@ func (p *Pii) Save() (interface{}, error) {
 
 	return id, nil
 }
+
+// Exist Check Pii data existance in local database
+func (p *Pii) Exist() (bool, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	client, _ := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+	collection := client.Database("facecomparison").Collection("pii")
+	resultFind := &p
+	err := collection.FindOne(context.TODO(), bson.M{"nik": p.Nik}).Decode(*resultFind)
+	defer cancel()
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
