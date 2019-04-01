@@ -2,7 +2,10 @@ package pii
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"net/textproto"
 	"time"
 
@@ -63,3 +66,39 @@ func GetLocalPii(nik string) {
 	}
 
 }
+
+// DecodeFormPost decode the formPost data in requests form-data and assign it to Pii Struct
+func DecodeFormPost(r *http.Request) (*Pii, error) {
+
+	if r.Method != "POST" {
+		return nil, errors.New("DecodeFormPost need POST method request")
+	}
+
+	r.ParseMultipartForm(10 << 20)
+
+	fd := r.PostForm
+	newPii := new(Pii)
+	decoder := schema.NewDecoder()
+	decoder.IgnoreUnknownKeys(true)
+
+	parsedtgllahir, errParse := time.Parse("2006-01-02", fd.Get("tanggal_lahir"))
+	if errParse != nil {
+		return nil, errors.New("Cannot parse tanggallahir decode")
+	}
+
+	tgllahirString := parsedtgllahir.String()
+	fd.Set("tanggal_lahir", tgllahirString)
+
+	err := decoder.Decode(newPii, fd)
+
+	if err != nil {
+		errdetail := fmt.Sprintf("Fail to decode request form-data to new Pii data Struct : %s\n", err)
+		return nil, errors.New(errdetail)
+	}
+
+	newPii.FotoKTP, err = imageStructHandler("foto_ktp", r)
+	newPii.FotoSelfie, err = imageStructHandler("foto_selfie", r)
+
+	return newPii, nil
+}
+
