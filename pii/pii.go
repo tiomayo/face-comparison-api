@@ -102,3 +102,21 @@ func DecodeFormPost(r *http.Request) (*Pii, error) {
 	return newPii, nil
 }
 
+func imageStructHandler(fieldname string, r *http.Request) (*ImageStruct, error) {
+	file, handler, err := r.FormFile(fieldname)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	fileBytes, err := ioutil.ReadAll(file)
+	newImageStruct := new(ImageStruct)
+	newImageStruct.Data = fileBytes
+	newImageStruct.Name = handler.Filename
+	newImageStruct.Size = handler.Size
+	newImageStruct.Header = handler.Header
+
+	return newImageStruct, nil
+}
