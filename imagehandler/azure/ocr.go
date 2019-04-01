@@ -9,7 +9,7 @@ import (
 )
 
 const uriOCR = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr"
-const apiKeyOCR = "9e9da3f626c74ad8afda993049b94f81"
+const apiKeyOCR = ""
 
 type Words struct {
 	Text string `json:"text"`
