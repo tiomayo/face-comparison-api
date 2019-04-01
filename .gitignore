@@ -3,3 +3,4 @@ _vendor-*
 *.exe
 face-comparison-api
 main
+*.note

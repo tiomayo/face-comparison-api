@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/tiomayo/middleware/imagehandler"
+	"github.com/tiomayo/face-comparison-api/imagehandler"
 )
 
 // var urlgambar = `{"url":"http://cdn2.tstatic.net/batam/foto/bank/images/cut-tari-artis-dan-pembawa-acara-televisi.jpg"}`
