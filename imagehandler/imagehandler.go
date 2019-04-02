@@ -9,8 +9,9 @@ import (
 
 // Comparator interface to compare two images
 type Comparator interface {
-	CompareByURL(string, string, chan []byte)
-	CompareByImages([]byte, []byte, chan []byte)
+	Compare(img1 []byte, img2 []byte, ch chan []byte)
+	// CompareByURL(string, string, chan []byte)
+	// CompareByImages([]byte, []byte, chan []byte)
 }
 
 // OCRReader interface to read identity from images
@@ -57,28 +58,26 @@ func (a Azure) Read(imgktp []byte, ch chan []byte) {
 	ch <- jsonIdentity
 }
 
-// AWS using AWS API to compare
-type AWS struct{}
-
-// CompareByImages of two images using AWS
-func (b AWS) CompareByImages(img1 []byte, img2 []byte, ch chan []byte) {
-	res, err := aws.Compare(img1, img2)
-	if err != nil {
-		fmt.Sprintln(err)
-	}
-	str := fmt.Sprintf("%f", res)
-	finalres := []byte(`[{"Confidence": "` + str + `"},`)
-	ch <- finalres
+// AwsAdapter adapt AWS function
+type AwsAdapter struct {
+	Gateway *aws.Gateway
 }
 
-func (b AWS) CompareByURL(img1 string, img2 string, ch chan []byte) {
-	fmt.Sprintln("Method not implemented")
+// Compare of two images using AWS
+func (b *AwsAdapter) Compare(img1 []byte, img2 []byte, ch chan []byte) {
+	p := &aws.CompareParam{
+		ImgKTP:    img1,
+		ImgSelfie: img2,
+	}
+
+	if res, err := b.Gateway.Compare(p); err == nil {
+		finalres := []byte(`{"Confidence": "` + fmt.Sprintf("%f", res) + `"}`)
+		ch <- finalres
+	}
 }
 
-func (b AWS) Read(img []byte, ch chan []byte) {
-	res, err := aws.Read(img)
-	if err != nil {
-		fmt.Sprintln(err)
+func (b *AwsAdapter) Read(img []byte, ch chan []byte) {
+	if res, err := b.Gateway.Read(img); err == nil {
+		ch <- res
 	}
-	ch <- res
 }

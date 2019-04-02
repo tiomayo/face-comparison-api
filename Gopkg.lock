@@ -67,6 +67,14 @@
   version = "v1.7.0"
 
 [[projects]]
+  digest = "1:345ad428d03cc89fa5498d61383d0d7f39afbe8731ca135c0ec92782285121d3"
+  name = "github.com/gorilla/schema"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "124d17ef95858a10835ce95502446cb5a9e9f715"
+  version = "v1.1.0"
+
+[[projects]]
   digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
   name = "github.com/jmespath/go-jmespath"
   packages = ["."]
@@ -164,9 +172,11 @@
   analyzer-version = 1
   input-imports = [
     "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/aws/aws-sdk-go/aws/session",
     "github.com/aws/aws-sdk-go/service/rekognition",
     "github.com/gorilla/mux",
+    "github.com/gorilla/schema",
     "go.mongodb.org/mongo-driver/bson",
     "go.mongodb.org/mongo-driver/bson/primitive",
     "go.mongodb.org/mongo-driver/mongo",

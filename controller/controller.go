@@ -8,6 +8,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/tiomayo/face-comparison-api/imagehandler/aws"
+
 	"github.com/tiomayo/face-comparison-api/imagehandler"
 )
 
@@ -29,7 +31,8 @@ type Respon struct {
 
 // Identify as endpoint
 func Identify(w http.ResponseWriter, r *http.Request) {
-	bufKTP, bufKTP2, bufSelfie := bytes.NewBuffer(nil), bytes.NewBuffer(nil), bytes.NewBuffer(nil)
+	bufKTP := bytes.NewBuffer(nil)
+	bufSelfie := bytes.NewBuffer(nil)
 	ch := make(chan []byte, 3)
 
 	// Handle OCR KTP
@@ -40,15 +43,6 @@ func Identify(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("Reading Image KTP " + headerKTP.Filename)
 	defer imgKTP.Close()
-
-	// Handle KTP image
-	imgKTP2, headerKTP2, err := r.FormFile("imgKTP2")
-	if err != nil {
-		http.Error(w, "Required file not found", http.StatusBadRequest)
-		return
-	}
-	fmt.Println("Reading Image KTP " + headerKTP2.Filename)
-	defer imgKTP2.Close()
 
 	// Handle Selfie image
 	imgSelfie, headerSelfie, err := r.FormFile("imgSelfie")
@@ -61,20 +55,21 @@ func Identify(w http.ResponseWriter, r *http.Request) {
 
 	// Write images into buffer byte
 	io.Copy(bufKTP, imgKTP)
-	io.Copy(bufKTP2, imgKTP2)
 	io.Copy(bufSelfie, imgSelfie)
 
-	var c imagehandler.Comparator = imagehandler.AWS{}
-	c.CompareByImages(bufKTP2.Bytes(), bufSelfie.Bytes(), ch)
-	// go c.CompareByImages(bufKTP2.Bytes(), bufSelfie.Bytes(), ch)
-	var d imagehandler.OCRReader = imagehandler.AWS{}
-	d.Read(bufKTP.Bytes(), ch)
-	// go d.Read(bufKTP.Bytes(), ch)
+	adapter := &imagehandler.AwsAdapter{
+		Gateway: &aws.Gateway{
+			Region:    "",
+			KeyID:     "",
+			SecretKey: "",
+		},
+	}
+	go adapter.Compare(bufKTP.Bytes(), bufSelfie.Bytes(), ch)
+	go adapter.Read(bufKTP.Bytes(), ch)
 	chanVal := <-ch
 	chanVal2 := <-ch
 
 	w.Header().Add("content-type", "application/json")
-
 	w.Write(append(chanVal, chanVal2...))
 }
 

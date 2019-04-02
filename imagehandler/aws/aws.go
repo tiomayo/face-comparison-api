@@ -1,66 +1,71 @@
 package aws
 
 import (
-	"github.com/aws/aws-sdk-go/aws/credentials"
+	"encoding/json"
+	"errors"
+	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/rekognition"
 )
 
+// Gateway AWS API
+type Gateway struct {
+	Region    string
+	KeyID     string
+	SecretKey string
+}
+
+// CompareParam struct as a param for compare function
+type CompareParam struct {
+	ImgKTP    []byte
+	ImgSelfie []byte
+}
+
 // Compare images using aws API
-func Compare(Img1 []byte, Img2 []byte) (float64, error) {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String("ap-northeast-2"),
-		Credentials: credentials.NewStaticCredentials("", "", ""),
-	})
-	svcR := rekognition.New(sess)
+func (g *Gateway) Compare(p *CompareParam) (float64, error) {
+	if sess, err := session.NewSession(&aws.Config{Region: aws.String(g.Region), Credentials: credentials.NewStaticCredentials(g.KeyID, g.SecretKey, "")}); err == nil {
+		svcR := rekognition.New(sess)
+		input := &rekognition.CompareFacesInput{
+			SimilarityThreshold: aws.Float64(0),
+			SourceImage: &rekognition.Image{
+				Bytes: p.ImgKTP,
+			},
+			TargetImage: &rekognition.Image{
+				Bytes: p.ImgSelfie,
+			},
+		}
 
-	input := &rekognition.CompareFacesInput{
-		SimilarityThreshold: aws.Float64(70),
-		SourceImage: &rekognition.Image{
-			Bytes: Img1,
-		},
-		TargetImage: &rekognition.Image{
-			Bytes: Img2,
-		},
-	}
-
-	res, err := svcR.CompareFaces(input)
-	if err == nil && len(res.FaceMatches) > 0 {
-		for _, matchedFace := range res.FaceMatches {
-			confidence := *matchedFace.Similarity
-			return confidence, nil
+		if res, err := svcR.CompareFaces(input); err == nil && len(res.FaceMatches) > 0 {
+			for _, matchedFace := range res.FaceMatches {
+				return *matchedFace.Similarity, nil
+			}
 		}
 	}
-	return 0, err
+	return 0, errors.New("Image comparison services is temporarily unable to process the request")
 }
 
 // Read text from images
-func Read(img []byte) ([]byte, error) {
-	sess, err := session.NewSession(&aws.Config{
-		Region:      aws.String("ap-northeast-2"),
-		Credentials: credentials.NewStaticCredentials("", "", ""),
-	})
-	svcR := rekognition.New(sess)
-
-	input := &rekognition.DetectTextInput{
-		Image: &rekognition.Image{
-			Bytes: img,
-		},
-	}
-
-	res, err := svcR.DetectText(input)
-	if err == nil && len(res.TextDetections) > 0 {
-		finalRes := []byte(`{"DetectedText": "`)
-		for _, detectedtext := range res.TextDetections {
-			if aws.StringValue(detectedtext.Type) == "LINE" {
-				finalRes = append(finalRes, aws.StringValue(detectedtext.DetectedText)+" "...)
+func (g *Gateway) Read(img []byte) ([]byte, error) {
+	if sess, err := session.NewSession(&aws.Config{Region: aws.String(g.Region), Credentials: credentials.NewStaticCredentials(g.KeyID, g.SecretKey, "")}); err == nil {
+		svcR := rekognition.New(sess)
+		// Define input
+		input := &rekognition.DetectTextInput{Image: &rekognition.Image{Bytes: img}}
+		// Start Reading process
+		if res, err := svcR.DetectText(input); err == nil && len(res.TextDetections) > 0 {
+			// finalRes := []byte(`{"DetectedText": "`)
+			mapping := make(map[string]string)
+			for i, detectedtext := range res.TextDetections {
+				if aws.StringValue(detectedtext.Type) == "LINE" {
+					mapping["Text"+fmt.Sprintf("%v", i)] = aws.StringValue(detectedtext.DetectedText)
+				}
 			}
+			fmt.Sprintln(mapping)
+			final, _ := json.Marshal(mapping)
+			return final, nil
 		}
-		finalRes = append(finalRes, `"}]`...)
-		return finalRes, nil
 	}
-
-	return nil, err
+	return nil, errors.New("OCR services is temporarily unable to process the request")
 }
