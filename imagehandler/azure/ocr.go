@@ -11,18 +11,22 @@ import (
 const uriOCR = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr"
 const apiKeyOCR = ""
 
+// Words text founded in image
 type Words struct {
 	Text string `json:"text"`
 }
 
+// Lines lines founded in image
 type Lines struct {
 	Lines []*Words `json:"words"`
 }
 
+// Regions founded in image
 type Regions struct {
 	Lines []*Lines `json:"lines"`
 }
 
+// OCRResponseJSON Response Struct
 type OCRResponseJSON struct {
 	Language string     `json:"language"`
 	Regions  []*Regions `json:"regions"`
