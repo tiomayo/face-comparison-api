@@ -61,28 +61,24 @@ func (a Azure) Read(imgktp []byte, ch chan []byte) {
 type AWS struct{}
 
 // CompareByImages of two images using AWS
-func (a AWS) CompareByImages(img1 []byte, img2 []byte, ch chan []byte) {
+func (b AWS) CompareByImages(img1 []byte, img2 []byte, ch chan []byte) {
 	res, err := aws.Compare(img1, img2)
 	if err != nil {
 		fmt.Sprintln(err)
 	}
 	str := fmt.Sprintf("%f", res)
-	finalres := []byte("Confidence: " + str)
+	finalres := []byte(`[{"Confidence": "` + str + `"},`)
 	ch <- finalres
 }
 
-func (a AWS) Read(img []byte, ch chan []byte) {
+func (b AWS) CompareByURL(img1 string, img2 string, ch chan []byte) {
+	fmt.Sprintln("Method not implemented")
+}
+
+func (b AWS) Read(img []byte, ch chan []byte) {
 	res, err := aws.Read(img)
 	if err != nil {
 		fmt.Sprintln(err)
 	}
 	ch <- res
-}
-
-// Google using Google Vision API to compare
-type Google struct{}
-
-// CompareByURL of two images using Goolge
-func (g Google) CompareByURL(img1 string, img2 string) (string, error) {
-	return "Comparing using google not implemented", nil
 }

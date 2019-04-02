@@ -64,14 +64,17 @@ func Identify(w http.ResponseWriter, r *http.Request) {
 	io.Copy(bufKTP2, imgKTP2)
 	io.Copy(bufSelfie, imgSelfie)
 
-	var c imagehandler.Comparator = imagehandler.Azure{}
-	go c.CompareByImages(bufKTP2.Bytes(), bufSelfie.Bytes(), ch)
-	var d imagehandler.OCRReader = imagehandler.Azure{}
-	go d.Read(bufKTP.Bytes(), ch)
+	var c imagehandler.Comparator = imagehandler.AWS{}
+	c.CompareByImages(bufKTP2.Bytes(), bufSelfie.Bytes(), ch)
+	// go c.CompareByImages(bufKTP2.Bytes(), bufSelfie.Bytes(), ch)
+	var d imagehandler.OCRReader = imagehandler.AWS{}
+	d.Read(bufKTP.Bytes(), ch)
+	// go d.Read(bufKTP.Bytes(), ch)
 	chanVal := <-ch
 	chanVal2 := <-ch
 
 	w.Header().Add("content-type", "application/json")
+
 	w.Write(append(chanVal, chanVal2...))
 }
 
