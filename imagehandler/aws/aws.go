@@ -8,14 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/rekognition"
 )
 
-type Lines struct {
-	Text string `json:"DetectedText"`
-}
-
-type Res struct {
-	DetectedText []*Lines
-}
-
 // Compare images using aws API
 func Compare(Img1 []byte, Img2 []byte) (float64, error) {
 	sess, err := session.NewSession(&aws.Config{
