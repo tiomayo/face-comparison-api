@@ -32,7 +32,8 @@ func main() {
 	// Define Routes
 	r.HandleFunc("/identify", controller.Identify).Methods("POST")
 	r.HandleFunc("/go/aisatsu", controller.Aisatsu).Methods("GET")
-	r.HandleFunc("/testsetpiidata", controller.TestSetPiiData).Methods("POST")
+	r.HandleFunc("/setpiidata", controller.SetPiiData).Methods("POST")
+	r.HandleFunc("/secondendpoint", controller.SecondEndpoint).Methods("POST")
 
 	// Start Server
 	go func() {
