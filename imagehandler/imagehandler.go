@@ -3,6 +3,7 @@ package imagehandler
 import (
 	"fmt"
 
+	"github.com/tiomayo/face-comparison-api/imagehandler/aws"
 	"github.com/tiomayo/face-comparison-api/imagehandler/azure"
 )
 
@@ -59,9 +60,23 @@ func (a Azure) Read(imgktp []byte, ch chan []byte) {
 // AWS using AWS API to compare
 type AWS struct{}
 
-// CompareByURL of two images using AWS
-func (aws AWS) CompareByURL(img1 string, img2 string) (string, error) {
-	return "Comparing using aws not implemented", nil
+// CompareByImages of two images using AWS
+func (a AWS) CompareByImages(img1 []byte, img2 []byte, ch chan []byte) {
+	res, err := aws.Compare(img1, img2)
+	if err != nil {
+		fmt.Sprintln(err)
+	}
+	str := fmt.Sprintf("%f", res)
+	finalres := []byte("Confidence: " + str)
+	ch <- finalres
+}
+
+func (a AWS) Read(img []byte, ch chan []byte) {
+	res, err := aws.Read(img)
+	if err != nil {
+		fmt.Sprintln(err)
+	}
+	ch <- res
 }
 
 // Google using Google Vision API to compare
